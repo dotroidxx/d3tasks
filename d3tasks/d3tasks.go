@@ -3,18 +3,12 @@ package d3tasks
 // import golang liblary
 import (
 	"os"
-	//"bytes"
 	"fmt"
 	"http"
 	"json"
 	"template"
-	//	"time"
+	"log"
 )
-
-// import project libs
-//import (
-//	"./models"
-//)
 
 // import appengine
 import (
@@ -38,6 +32,7 @@ func init() {
 	// Binding Handler Funcs
 	http.HandleFunc("/", errorHandler(indexHandler))
 	http.HandleFunc("/tasks", errorHandler(taskHandler))
+	http.HandleFunc("/post", errorHandler(postHandler))
 
 	// initialize Templates
 	indexTemplate = template.New(nil)
@@ -77,21 +72,28 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 
 	_ = u.String()
 
-	q := datastore.NewQuery("Tasks").Filter("UserId = ", u.String()).Order("-Priority")
+
+	log.Println("before Query")
+	q := datastore.NewQuery("Tasks").Filter("UserId = ", u.String())//.Order("-Priority")
+
+	log.Println("after")
 
 	var tasks []Tasks
 
 	for t := q.Run(c); ; {
 
 		var task Tasks
-		key, err := t.Next(&tasks)
+		key, err := t.Next(&task)
+
+		log.Println(err)
 
 		if err == datastore.Done {
 			break
 		}
 
 		check(err)
-		task.Key = key.StringID()
+		log.Println("keys:" + key.String())
+		task.Key = key.String()
 		tasks = append(tasks, task)
 
 	}
@@ -109,19 +111,28 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	var err os.Error
 	var ok bool
+	
+	c := appengine.NewContext(r)
+	
+	printLog(c, "Post Handler Start")
 
 	if r.Method != "POST" {
+		printLog(c, "Not Post Method Return")
 		return
 	}
 
-	c := appengine.NewContext(r)
 	err = r.ParseForm()
 	check(err)
 
+	printLog(c, "form parsed")
 	u := user.Current(c)
 
-	var task *Tasks
+	printLog(c, "User:" + u.String())
+
+	task := new(Tasks)
 	err = task.SetValue(u.String(), r)
+
+	printLog(c, "Set Values")
 
 	check(err)
 
@@ -130,13 +141,19 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		// postエラーの場合にjQueryでステータスを取れるか？
 	}
 
+	printLog(c, "Validated")
+
 	if task.Key != "" {
 		k := datastore.NewKey("Tasks", task.Key, 0, nil)
 		_, err = datastore.Put(c, k, task)
 	} else {
 		_, err = datastore.Put(c, datastore.NewIncompleteKey("Tasks"), task)
 	}
+
+	log.Println(err)
 	check(err)
+
+	printLog(c, "Puted")
 
 	return
 
@@ -167,7 +184,17 @@ func errorHandler(fn http.HandlerFunc) http.HandlerFunc {
 
 func check(err os.Error) {
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 
 }
+
+func printLog(c appengine.Context, v string){
+	c.Logf("%v", v)
+	if appengine.IsDevAppServer() {
+		log.Println(v)
+	}
+
+}
+

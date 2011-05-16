@@ -7,6 +7,7 @@ import (
 	"time"
 	"http"
 	"strconv"
+	"log"
 )
 
 // structure for datastore
@@ -41,28 +42,41 @@ func (t *Tasks) SetValue(Id string, r *http.Request) os.Error {
 	t.Key = r.FormValue(FORM_KEY)
 	t.Status, err = strconv.Atoi(r.FormValue(FORM_STATUS))
 	if err != nil {
+		log.Println(err)
 		return err
 	}
+
+	log.Println("Status")
 
 	t.Context = html.EscapeString(r.FormValue(FORM_CONTEXT))
 	t.IsUseLimit, err = strconv.Atob(r.FormValue(FORM_LIMIT))
 	if err != nil {
+		log.Println(err)
 		return err
 	}
+
+	log.Println("IsUseLimit")
 
 	t.IsComplete = (t.Status == 2)
 	t.IsCanceld = (t.Status == 9)
 
+	log.Println("Set Bool Value")
+
 	if t.IsUseLimit {
+		
+		log.Println(r.FormValue(FORM_DATE))
 
 		var limit *time.Time
-		limit, err = time.Parse("yyyy/MM/dd hh:mm", r.FormValue(FORM_DATE))
-		if err != nil {
+		limit, err = time.Parse(time.RFC3339, r.FormValue(FORM_DATE))
+		if err == nil {
 			t.PostDate = datastore.SecondsToTime(limit.Seconds())
 		} else {
-			return err
+			//log.Println(err)
+			//return err
 		}
 	}
+
+	log.Println("PostDate")
 
 	if t.IsComplete {
 		t.CompleteDate = datastore.SecondsToTime(time.Seconds())

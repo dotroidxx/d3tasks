@@ -2,13 +2,20 @@
 <html>
 		<head>
 				<title>toDo - Doing - Done タスク管理</title>
+				<script type="text/javascript" src="/static/js/object.js" ></script>
 				<script type="text/javascript" src="https://www.google.com/jsapi?key=ABQIAAAA-aGhuJZ-CMEg8FC1ye2K7hTdKfYxxnMWp9Q1PD5tBxuGtHtNXxT4SId1T4BOOBVcv9fxVp9H1Yp71Q"></script>
 				<script language="javascript" type="text/javascript">
 						google.load("jquery","1.4.2");
 						google.load("jqueryui", "1.7.2");
 
 						var OnLoad = function(){
-							alert("Loaded");
+							console.log("OnLoad start");
+							var script = document.createElement("script");
+							console.log("script element created");
+							script.src = "/static/js/app.js";
+							script.type = "text/javascript";
+							document.getElementsByTagName("head")[0].appendChild(script);
+							console.log("added");
 						}
 
 						google.setOnLoadCallback(OnLoad);

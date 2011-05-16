@@ -1,14 +1,13 @@
 var D3T = (function() {
 
 	var Version = '0.1';
-	var Task = (function() {
-		var Key;
-		var Status;
-		var Context;
-		var UseLimit;
-		var LimitDate;
-
-	})();
+	var Task = {
+		Key : '',
+		Status: '',
+		Context:'',
+		UseLimit:'',
+		LimitDate:''
+	}
 
 	return {
 
@@ -22,32 +21,38 @@ var D3T = (function() {
 		},
 
 		post: function() {
+			console.log("Task.Key :" + Task.Key);	
+			console.log("Task.Status :" + Task.Status);
+			console.log("Task.Context :" + Task.Context);
+			console.log("Task.UseLimit :" + Task.UseLimit);
+			console.log("Task.LimitDate :" + Task.LimitDate);
+
 			$.ajax({
 				type: 'POST',
 				url: '/post',
 				data:
 					{
-						task_key: D3T.Task.Key,
-						status: D3T.Task.Status,
-						context: D3T.Task.Context,
-						use_limit: D3T.Task.UseLimit,
-						limit_date: D3T.Task.LimitDate
+						task_key: Task.Key,
+						status: Task.Status,
+						context: Task.Context,
+						use_limit: Task.UseLimit,
+						limit_date: Task.LimitDate
 					},
 				success: function(msg) {
-					alart(msg);
+					console.log("success :" + msg);
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
-					alert(textStatus);
+					console.log("error :" + textStatus);
 				}
 			});
 		},
 
 		post_test: function() {
-			D3T.Task.Key = '';
-			D3T.Task.Status = 1;
-			D3T.Task.Context = 'タスク１';
-			D3T.Task.UseLimit = True;
-			D3T.Task.LimitDate = '2011/05/17 14:30';
+			Task.Key = '';
+			Task.Status = 1;
+			Task.Context = 'タスク１';
+			Task.UseLimit = true;
+			Task.LimitDate = '2011-05-17T14:30:05Z0700';
 
 			D3T.post();
 
@@ -58,3 +63,14 @@ var D3T = (function() {
 
 	}; // end of return
 })();
+
+
+/*
+ *
+ *
+ */
+$(document).ready(function(){
+
+	D3T.post_test();
+
+});
