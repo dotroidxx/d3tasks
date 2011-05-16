@@ -72,9 +72,8 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 
 	_ = u.String()
 
-
 	log.Println("before Query")
-	q := datastore.NewQuery("Tasks").Filter("UserId = ", u.String())//.Order("-Priority")
+	q := datastore.NewQuery("Tasks").Filter("UserId = ", u.String()) //.Order("-Priority")
 
 	log.Println("after")
 
@@ -111,9 +110,9 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	var err os.Error
 	var ok bool
-	
+
 	c := appengine.NewContext(r)
-	
+
 	printLog(c, "Post Handler Start")
 
 	if r.Method != "POST" {
@@ -127,7 +126,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	printLog(c, "form parsed")
 	u := user.Current(c)
 
-	printLog(c, "User:" + u.String())
+	printLog(c, "User:"+u.String())
 
 	task := new(Tasks)
 	err = task.SetValue(u.String(), r)
@@ -190,11 +189,10 @@ func check(err os.Error) {
 
 }
 
-func printLog(c appengine.Context, v string){
+func printLog(c appengine.Context, v string) {
 	c.Logf("%v", v)
 	if appengine.IsDevAppServer() {
 		log.Println(v)
 	}
 
 }
-
