@@ -91,8 +91,8 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		check(err)
-		log.Println("keys:" + key.String())
-		task.Key = key.String()
+		log.Println("keys:" + key.StringID())
+		task.KeyString = key.StringID()
 		tasks = append(tasks, task)
 
 	}
@@ -142,8 +142,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	printLog(c, "Validated")
 
-	if task.Key != "" {
-		k := datastore.NewKey("Tasks", task.Key, 0, nil)
+	if task.KeyString != "" {
+		k := datastore.NewKey("Tasks", task.KeyString, 0, nil)
 		_, err = datastore.Put(c, k, task)
 	} else {
 		_, err = datastore.Put(c, datastore.NewIncompleteKey("Tasks"), task)

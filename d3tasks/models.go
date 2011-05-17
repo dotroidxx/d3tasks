@@ -21,7 +21,7 @@ type Tasks struct {
 	PlanDate     datastore.Time // Task Time Limit
 	PostDate     datastore.Time // new Post Date
 	CompleteDate datastore.Time // Complete Date
-	Key          string         // this key is Tempplaly valiale
+	KeyString    string         // this key is Tempplaly valiale
 }
 
 const (
@@ -39,7 +39,7 @@ func (t *Tasks) SetValue(Id string, r *http.Request) os.Error {
 	var err os.Error
 
 	t.UserId = Id
-	t.Key = r.FormValue(FORM_KEY)
+	t.KeyString = r.FormValue(FORM_KEY)
 	t.Status, err = strconv.Atoi(r.FormValue(FORM_STATUS))
 	if err != nil {
 		log.Println(err)
@@ -65,19 +65,19 @@ func (t *Tasks) SetValue(Id string, r *http.Request) os.Error {
 	if t.IsUseLimit {
 
 		log.Println(r.FormValue(FORM_DATE))
-
+		log.Println(time.RFC3339)
 		var limit *time.Time
-		limit, err = time.Parse(time.RFC3339, r.FormValue(FORM_DATE))
+		limit, err = time.Parse("2006-01-02 15:04:05", r.FormValue(FORM_DATE))
 		if err == nil {
-			t.PostDate = datastore.SecondsToTime(limit.Seconds())
+			t.PlanDate = datastore.SecondsToTime(limit.Seconds())
 		} else {
-			//log.Println(err)
-			//return err
+			log.Println(err)
+			return err
 		}
 	}
 
 	log.Println("PostDate")
-
+	t.PostDate = datastore.SecondsToTime(time.Seconds())
 	if t.IsComplete {
 		t.CompleteDate = datastore.SecondsToTime(time.Seconds())
 	}

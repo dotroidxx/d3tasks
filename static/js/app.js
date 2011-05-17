@@ -52,7 +52,7 @@ var D3T = (function() {
 			Task.Status = 1;
 			Task.Context = 'タスク１';
 			Task.UseLimit = true;
-			Task.LimitDate = '2011-05-17T14:30:05Z0700';
+			Task.LimitDate = '2011-05-17 14:30:05';
 
 			D3T.post();
 
