@@ -13,6 +13,7 @@ var D3T = (function() {
 
 		init: function() {
 
+			console.log("app initialized");
 
 		},
 
@@ -48,11 +49,11 @@ var D3T = (function() {
 		},
 
 		post_test: function() {
-			Task.Key = '';
+			Task.Key = '1';
 			Task.Status = 1;
 			Task.Context = 'タスク１';
 			Task.UseLimit = true;
-			Task.LimitDate = '2011-05-17 14:30:05';
+			Task.LimitDate = '2011-05-18 14:30:05';
 
 			D3T.post();
 
@@ -71,6 +72,6 @@ var D3T = (function() {
  */
 $(document).ready(function(){
 
-	D3T.post_test();
+	//D3T.post_test();
 
 });

@@ -8,6 +8,7 @@ import (
 	"json"
 	"template"
 	"log"
+	"strconv"
 )
 
 // import appengine
@@ -70,8 +71,6 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 
-	_ = u.String()
-
 	log.Println("before Query")
 	q := datastore.NewQuery("Tasks").Filter("UserId = ", u.String()) //.Order("-Priority")
 
@@ -91,8 +90,8 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		check(err)
-		log.Println("keys:" + key.StringID())
-		task.KeyString = key.StringID()
+		log.Println("keys:" + strconv.Itoa64(key.IntID()))
+		task.KeyID = key.IntID()
 		tasks = append(tasks, task)
 
 	}
@@ -142,8 +141,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	printLog(c, "Validated")
 
-	if task.KeyString != "" {
-		k := datastore.NewKey("Tasks", task.KeyString, 0, nil)
+	if task.KeyID != 0 {
+		k := datastore.NewKey("Tasks", "", task.KeyID, nil)
 		_, err = datastore.Put(c, k, task)
 	} else {
 		_, err = datastore.Put(c, datastore.NewIncompleteKey("Tasks"), task)
@@ -190,9 +189,11 @@ func check(err os.Error) {
 }
 
 func printLog(c appengine.Context, v string) {
-	c.Logf("%v", v)
+
 	if appengine.IsDevAppServer() {
 		log.Println(v)
+	} else {
+		c.Logf("%v", v)
 	}
 
 }

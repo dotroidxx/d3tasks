@@ -21,7 +21,7 @@ type Tasks struct {
 	PlanDate     datastore.Time // Task Time Limit
 	PostDate     datastore.Time // new Post Date
 	CompleteDate datastore.Time // Complete Date
-	KeyString    string         // this key is Tempplaly valiale
+	KeyID        int64          // this key is Tempplaly valiale
 }
 
 const (
@@ -39,7 +39,11 @@ func (t *Tasks) SetValue(Id string, r *http.Request) os.Error {
 	var err os.Error
 
 	t.UserId = Id
-	t.KeyString = r.FormValue(FORM_KEY)
+	t.KeyID, err = strconv.Atoi64(r.FormValue(FORM_KEY))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 	t.Status, err = strconv.Atoi(r.FormValue(FORM_STATUS))
 	if err != nil {
 		log.Println(err)
