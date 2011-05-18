@@ -41,8 +41,7 @@ func (t *Tasks) SetValue(Id string, r *http.Request) os.Error {
 	t.UserId = Id
 	t.KeyID, err = strconv.Atoi64(r.FormValue(FORM_KEY))
 	if err != nil {
-		log.Println(err)
-		return err
+		t.KeyID = 0
 	}
 	t.Status, err = strconv.Atoi(r.FormValue(FORM_STATUS))
 	if err != nil {

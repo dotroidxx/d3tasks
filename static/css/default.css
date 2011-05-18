@@ -20,17 +20,31 @@
 .task-box-color0 {
 	background-image  : -moz-linear-gradient(top, #87CEFA, #E0FFFF);
 	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #87CDFA), color-stop(1.0, #E0FFFF));
-
+	float:left;
+	width:300px;
 }
 .task-box-color1 {
-	background-image  : -moz-linear-gradient(top, #87CEFA, #E0FFFF);
-	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #87CDFA), color-stop(1.0, #E0FFFF));
-
+	background-image  : -moz-linear-gradient(top, #398235, #c9de96);
+	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #398235), color-stop(1.0, #c9de96));
+	margin-left: 330px;
+	margin-right: 330px;
 }
 .task-box-color2 {
-	background-image  : -moz-linear-gradient(top, #87CEFA, #E0FFFF);
-	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #87CDFA), color-stop(1.0, #E0FFFF));
+	background-image  : -moz-linear-gradient(top, #e2e2e2, #fefefe);
+	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #e2e2e2), color-stop(1.0, #fefefe));
+	float:right;
+	width:300px;
+}
 
+.task-box {
+	padding: 1px 10px;
+}
+
+.loading-box{
+	margin: 0 auto;
+	background-image:url("/static/img/loadinfo.net.gif");
+	height:48px;
+	width:48px;
 }
 
 h2 {

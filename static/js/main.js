@@ -24,8 +24,9 @@ function(){
 					require.ready(function(){
 
 						// when the page is loaded
-						$.jGrowl("Hello world");
-						console.log("Hello world");
+						console.log("start getAll");
+						D3T.getAll();
+
 					});
 				});
 	});
