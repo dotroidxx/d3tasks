@@ -1,6 +1,6 @@
 require([
 		"https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js",
-		"https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js",
+		"https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"
 ],
 function(){
 
@@ -9,6 +9,7 @@ function(){
 	require([
 		"/static/js/object.js",
 		"/static/js/jquery.jgrowl.js",
+		"/static/js/jquery.infieldlabel.min.js"
 	],
 	function(){
 

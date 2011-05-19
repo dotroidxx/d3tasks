@@ -32,8 +32,10 @@ func init() {
 
 	// Binding Handler Funcs
 	http.HandleFunc("/", errorHandler(indexHandler))
-	http.HandleFunc("/tasks", errorHandler(taskHandler))
-	http.HandleFunc("/post", errorHandler(postHandler))
+	http.HandleFunc("/tasks", errorHandler(getAllHandler))
+	http.HandleFunc("/onetask", errorHandler(getOneHandler))
+	http.HandleFunc("/update", errorHandler(updateHandler))
+	http.HandleFunc("/create", errorHandler(createHandler))
 
 	// initialize Templates
 	indexTemplate = template.New(nil)
@@ -62,7 +64,32 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Response Tasks Json Handler 
-func taskHandler(w http.ResponseWriter, r *http.Request) {
+func getOneHandler(w http.ResponseWriter, r *http.Request) {
+
+	var err os.Error
+
+	if r.Method != "GET" {
+		return
+	}
+
+	c := appengine.NewContext(r)
+	
+	err = r.ParseForm()
+	check(err)
+	var id int64
+	id, err = strconv.Atoi64(r.FormValue("id"))
+	k := datastore.NewKey("Tasks","", id, nil)
+
+	var task *Tasks
+	err = datastore.Get(c, k, task)
+	check(err)
+	
+	returnJson(w, task)
+
+}
+
+// Response Tasks Json Handler 
+func getAllHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "GET" {
 		return
@@ -96,16 +123,18 @@ func taskHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	bytes, err := json.Marshal(tasks)
-	check(err)
-
-	w.Header().Set("Content-Type", "application/json")
-
-	w.Write(bytes)
+	returnJson(w, tasks)
 
 }
 
-func postHandler(w http.ResponseWriter, r *http.Request) {
+func returnJson(w http.ResponseWriter, v interface{}){
+	bytes, err := json.Marshal(v)
+	check(err)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
+}
+
+func updateHandler(w http.ResponseWriter, r *http.Request) {
 
 	var err os.Error
 	var ok bool
@@ -152,8 +181,54 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 
 	printLog(c, "Puted")
+	
+	returnJson(w, task.KeyID)
 
-	return
+}
+
+func createHandler(w http.ResponseWriter, r *http.Request) {
+
+	var err os.Error
+	var ok bool
+
+	c := appengine.NewContext(r)
+
+	printLog(c, "Post Handler Start")
+
+	if r.Method != "POST" {
+		printLog(c, "Not Post Method Return")
+		return
+	}
+
+	err = r.ParseForm()
+	check(err)
+
+	u := user.Current(c)
+
+	task := new(Tasks)
+
+	task.Context = r.FormValue("task_key")
+	task.Status = 0
+	task.UserId = u.String()
+
+	if err, ok = task.IsValid(); ok {
+		check(err)
+		// postエラーの場合にjQueryでステータスを取れるか？
+	}
+
+	printLog(c, "Validated")
+
+	var resultKey *datastore.Key
+	resultKey, err = datastore.Put(c, datastore.NewIncompleteKey("Tasks"), task)
+
+	log.Println(err)
+	check(err)
+
+	printLog(c, "Puted")
+	
+	returnJson(w, resultKey.IntID())
+
+
 
 }
 

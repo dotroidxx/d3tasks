@@ -10,8 +10,10 @@ var D3T = (function() {
 	}
 
 	var APIs = {
-		getUrl: '/tasks',
-		postUrl: '/post'
+		get: '/tasks',
+		getOne:'/onetask',
+		update: '/update',
+		create: '/create'
 	}
 
 	return {
@@ -19,32 +21,43 @@ var D3T = (function() {
 		init: function() {
 
 			console.log("app initialized");
+			$("label").inFieldLabels();
+			$("input").attr("autocomplete", "off");
+
+
 
 		},
 		getAll: function() {
-			D3T.get(APIs.getUrl);
+			D3T.get(APIs.get, false);
 		},
 		getOne: function(id /* int */ ) {
-			D3T.get(APIs.getUrl + "?id=" + id);
+			D3T.get(APIs.get + "?id=" + id, true);
 		},
-		get: function(address /* string */){
+		get: function(address /* string */, isOnly /* bool */){
 
 			console.log(address);
 
-			$.getJSON(address, D3T.parse);
+			$.getJSON(address, function(json){
+				D3T.parse(json, isOnly);
+			});
 
 		},
-		parse: function(json){
+		parse: function(json, isOnly){
 
 			console.log(json);
-			console.log(json.length);
+			console.log(isOnly);
 			// 
-			var dfTodo = document.createDocumentFragment();
-			var dfDoing = document.createDocumentFragment();
-			var dfDone = document.createDocumentFragment();
-			
+	
+			var fragments = [
+				document.createDocumentFragment(),
+				document.createDocumentFragment(),
+				document.createDocumentFragment()
+			];
+
 			var taskItem = null;
-			
+			var taskStatus; /* for isOnly = true Case */
+			var taskKey;    /* for isOnly = true Case */
+
 			$.each(json, function() {
 
 				console.log("id is " + this.KeyID);
@@ -55,36 +68,20 @@ var D3T = (function() {
 				//taskItem.html("<p>" + this.Context + "</p>");
 				taskItem.appendChild(document.createTextNode(this.Context));
 
-				switch(this.Status){
-					case 0:
-						console.log("Add TodoBox:" + this.KeyID);
-						dfTodo.appendChild(taskItem);
-						break;
-					case 1:
-						console.log("Add DoingBox:" + this.KeyID);
-						dfDoing.appendChild(taskItem);
-						break;
-					case 2:
-						console.log("Add DoneBox:" + this.KeyID);
-						dfDone.appendChild(taskItem);
-						break;
-					default:
-						console.log("Unknown Status Data Arrival");
-				}
-				
+				fragments[this.Status].appendChild(taskItem);
+				taskStatus = this.Status;
+			
 			});
 
-			var todo = document.getElementById("status0");
-			var doing = document.getElementById("status1");
-			var done = document.getElementById("status2");
-
-			todo.removeChild(document.getElementById("loading0"));
-			todo.appendChild(dfTodo);
-			doing.removeChild(document.getElementById("loading1"));
-			doing.appendChild(dfDoing);
-			done.removeChild(document.getElementById("loading2"));
-			done.appendChild(dfDone);
-
+			var i;
+			if (!isOnly){
+				var i;
+				for (i = 0; i < 3; i++){
+					D3T.insert(i, fragments[i]);
+				}
+			}else{
+				D3T.replace(taskKey,taskStatus,fragments[taskStatus]);
+			}
 			console.log($("#status0"));
 			console.log($("#status1"));
 			console.log($("#status2"));
@@ -92,7 +89,27 @@ var D3T = (function() {
 			delete json;
 
 		},
-		post: function() {
+		insert:function(status /*int*/, fragment /*fragmentElement*/){
+			var elem = document.getElementById("status" + status);
+			elem.removeChild(document.getElementById("loading" + status));
+			elem.appendChild(fragment);
+			console.log(elem.parentNode);		
+			
+		},
+		replase:function(key/* int */,  status/*int*/, fragment /*fragmentElement*/){
+			
+			var task = document.getElementById("id_" + key);
+			var elem = document.getElementById("status" + status);
+			
+			if (task){
+				task.parentNode.removeChild(task);	
+			}
+
+			elem.insertBefore(fragment, elem.childNodes[0]);
+			
+		
+		},
+		update: function() {
 			
 			console.log("Task.Key :" + Task.Key);	
 			console.log("Task.Status :" + Task.Status);
@@ -102,7 +119,7 @@ var D3T = (function() {
 
 			$.ajax({
 				type: 'POST',
-				url: '/post',
+				url: APIs.update,
 				data:
 					{
 						task_key: Task.Key,
@@ -113,6 +130,7 @@ var D3T = (function() {
 					},
 				success: function(msg) {
 					console.log("success :" + msg);
+					D3T.getOne(msg);
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 					console.log("error :" + textStatus);
@@ -127,14 +145,14 @@ var D3T = (function() {
 			Task.UseLimit = true;
 			Task.LimitDate = '2011-05-18 14:30:05';
 
-			//D3T.post();
+			//D3T.update();
 			Task.Key = '';
 			Task.Status = 2;
 			Task.Context = 'タスク3';
 			Task.UseLimit = true;
 			Task.LimitDate = '2011-05-18 14:30:05';
 
-			D3T.post();
+			D3T.update();
 
 
 		},
@@ -151,6 +169,6 @@ var D3T = (function() {
  */
 $(document).ready(function(){
 
-//	D3T.post_test();
+	D3T.post_test();
 
 });

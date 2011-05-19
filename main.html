@@ -1,33 +1,45 @@
 <!DOCTYPE html>
 <html>
-		<head>
-				<title>toDo - Doing - Done タスク管理</title>
-				<link rel="stylesheet" href="/static/css/jquery.jgrowl.css" type="text/css" />
-				<link rel="stylesheet" href="/static/css/default.css" type="text/css" />
-				<link rel='stylesheet' ref='http://fonts.googleapis.com/css?family=Dancing+Script&text=toDoinged' type='text/css' />
-				<script type="text/javascript" data-main="/static/js/main.js" src="/static/js/require.js"></script>
-		</head>
-		<body>
-				<h1>Hello world</h1>
-				<div id="task-box-0" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color0">
-					<h2>toDo</h2>
-					<div id="status0">
-						<div id="loading0" class="loading-box"></div>
-					</div>
-				</div>
-				<div id="task-box-2" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color2">
-					<h2>Done</h2>
-					<div id="status2">
-						<div id="loading2" class="loading-box"></div>
-					</div>
-				</div>
-				<div id="task-box-1" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color1">
-					<h2>Doing</h2>
-					<div id="status1">
-						<div id="loading1" class="loading-box"></div>
-					</div>
-				</div>
+	<head>
+		<title>toDo - Doing - Done タスク管理</title>
+		<script type="text/javascript" data-main="/static/js/main.js" src="/static/js/require.js"></script>
+		<link rel="stylesheet" href="/static/css/jquery.jgrowl.css" type="text/css" />
+		<link rel="stylesheet" href="/static/css/default.css" type="text/css" />
+		<link rel="stylesheet" href="/static/css/layout.css" type="text/css" />
+		<link rel='stylesheet' ref='http://fonts.googleapis.com/css?family=Dancing+Script&text=toDoinged' type='text/css' />
+	
+	</head>
+	<body>
+		<div id="input-box">
+			<form accept-charset="UTF-8">
+				<fieldset>
+					<p>
+						<label for="task">Add Your Task</label>
+						<textarea name="task" id="task" rows="2" cols="20" tabindex="0"></textarea>
+						<button id="create-task-button">追加</button>	
+					</p>
+				</fieldset>
+			</form>				
+		</div>
 
+		<div id="task-box-0" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color0">
+			<h2>toDo</h2>
+			<div id="status0">
+				<div id="loading0" class="loading-box"></div>
+			</div>
+		</div>
+		<div id="task-box-2" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color2">
+			<h2>Done</h2>
+			<div id="status2">
+				<div id="loading2" class="loading-box"></div>
+			</div>
+		</div>
+		<div id="task-box-1" class="task-box task-box-border task-box-shadow task-box-trasform task-box-color1">
+			<h2>Doing</h2>
+			<div id="status1">
+				<div id="loading1" class="loading-box"></div>
+			</div>
+		</div>
 		</body>
 
 </html>
