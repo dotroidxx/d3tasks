@@ -36,7 +36,8 @@ var D3T = (function() {
 
 			$(".droppable").sortable({
 					items:".task-list",
-					connectWith:$(".droppable")
+					connectWith:$(".droppable"),
+					update:D3T.updateHandler
 			});
 /*
 			$(".droppable").disableSelection();
@@ -49,6 +50,12 @@ var D3T = (function() {
 					console.log("droped");
 				}});
 */
+		},
+		updateHandler: function(e, ui){
+			console.log($(ui.item).attr("id") + "is update");
+			var task = D3T.getHiddenValue(Number($(ui.item).attr("id").substring(3)));
+			console.log(task);
+
 		},
 		getAll: function() {
 			D3T.get(APIs.get, false);
@@ -77,24 +84,46 @@ var D3T = (function() {
 				document.createDocumentFragment()
 			];
 
-			var taskItem = null;
-			var taskContent = null;
+			var taskItem = null;	/* main element */
+			var taskContent = null;	/* view element */
+			var valStatus = null;	/* hidden element for status */
+			var valComplete = null;	/* hidden element for isComplete */
+			var valCancel = null;	/* hidden element for isCancel */
+			var valUseLimit = null;	/* hidden element for isUseLimit */
+			var valPlanDate = null;	/* hidden element for PlanDate */
+
 			var taskStatus; /* for isOnly = true Case */
 			var taskKey;    /* for isOnly = true Case */
 
 			$.each(json, function() {
 
-				console.log("id is " + this.KeyID);
+				//console.log("id is " + this.KeyID);
 
 				taskItem = document.createElement("li");
+				taskItem.id = "id_" + this.KeyID;
 				//taskItem.attr("id","id_" + this.KeyID)
 				//		.attr("class","status_" + this.Status);
 				//taskItem.html("<p>" + this.Context + "</p>");
 
 				taskItem.className = "task-list draggable";
-				taskContent = document.createElement("p").appendChild(document.createTextNode(this.Context));
+				taskContent = document.createElement("p"); //.appendChild(document.createTextNode(this.Context));
+				taskContent.id = "context_" + this.KeyID;
 				taskContent.className = "task-content";
+				taskContent.appendChild(document.createTextNode(this.Context));
+
+				valStatus = D3T.createHiddenElement(this.KeyID, "status", this.Status);
+				valComplete = D3T.createHiddenElement(this.KeyID, "complete", this.IsComplete);
+				valCancel = D3T.createHiddenElement(this.KeyID, "cancel", this.IsCancel);
+				valUseLimit = D3T.createHiddenElement(this.KeyID, "use-limit", this.IsUseLimit);
+				valPlanDate = D3T.createHiddenElement(this.KeyID, "plan-date", this.PlanDate);
+				
 				taskItem.appendChild(taskContent);
+				taskItem.appendChild(valStatus);
+				taskItem.appendChild(valComplete);
+				taskItem.appendChild(valCancel);
+				taskItem.appendChild(valUseLimit);
+				taskItem.appendChild(valPlanDate);
+				
 /*
 				$(taskItem).draggable({
 					cursor:'move',
@@ -122,10 +151,11 @@ var D3T = (function() {
 			delete json;
 
 		},
-		insert:function(status /*int*/, fragment /*fragmentElement*/){
+		insert:function(status /*int*/, fragment /*fragmentElement*/, val /* object */){
 			var elem = document.getElementById("status" + status);
 			elem.removeChild(document.getElementById("loading" + status));
 			elem.appendChild(fragment);
+			elem.value = val;
 			console.log(elem.parentNode);		
 			
 		},
@@ -141,6 +171,31 @@ var D3T = (function() {
 			elem.insertBefore(fragment, elem.childNodes[0]);
 			
 		
+		},
+		createHiddenElement:function(id /* int */, prefix /* string */, obj /* objct */){
+			var elem = document.createElement("input");
+			elem.type = "hidden";
+			elem.id   = prefix + "_" + id;
+			elem.value = obj;
+			return elem;
+		},
+		getHiddenValue:function(id /* int */){
+			console.log("param id=" + id);
+			var status = document.getElementById("status_" + id).value;
+			var isComplete = document.getElementById("complete_" + id).value;
+			var isCancel = document.getElementById("cancel_" + id).value;
+			var isUseLimit = document.getElementById("use-limit_" + id).value;
+			var planDate = document.getElementById("plan-date_" + id).value;
+			console.log($("#context_" + id));
+			var context = $("#context_" + id).text();
+
+			return {
+				Key : "" + id,
+				Status: status,
+				Context: context,
+				UseLimit: isUseLimit,
+				LimitDate: planDate
+			};
 		},
 		update: function() {
 			
