@@ -1,8 +1,52 @@
+body{
+	margin: 0px 10px 0px 10px;
+	background-image:url("/static/img/background.gif");
+}
+
+fieldset {
+	border-width:0;
+}
+
+li {
+	list-style-type:none;
+}
+
+ul{
+	padding-left:0px;
+	position:relative;
+}
+
 .task-box-border {
 	-webkit-border-radius :20px;
 	-moz-border-radius    :20px;
 	border-radius         :20px;
+	margin-top:10px;
+}
 
+
+
+#input-box {
+	padding-left:5px;
+	background-color : rgba(240,240,240,0.5);
+	Background:rgba(240,240,240,0.5);
+	display:none;
+
+}
+
+
+#input-box-buttom {
+	height:20px;
+	-webkit-border-radius :0px 0px 20px 20px / 0px 0px 20px 20px;
+	-moz-border-radius    :0px 0px 20px 20px / 0px 0px 20px 20px;
+	border-radius         :0px 0px 20px 20px / 0px 0px 20px 20px;
+	-webkit-box-shadow : 5px 5px 10px #000000;
+	-moz-box-shadow    : 5px 5px 10px #000000;
+	box-shadow         : 5px 5px 10px #000000;
+	padding-left:5px;
+	background-color : rgba(240,240,240,0.5);
+	Background:rgba(240,240,240,0.5);
+
+	cursor:pointer;
 }
 
 .task-box-shadow {
@@ -15,29 +59,48 @@
 	-webkit-transform :scale(1.1);
 	-moz-transform    :scale(1.1);
 	-o-transform      :scale(1.1);
+	opacity : 0.7;
 }
 
 .task-box-color0 {
+/*
 	background-image  : -moz-linear-gradient(top, #87CEFA, #E0FFFF);
 	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #87CDFA), color-stop(1.0, #E0FFFF));
+*/
+	background-color : rgba(225,225,225,0.5);
+	Background:rgba(225,225,225,0.5);
+
 	float:left;
 	width:300px;
 }
 .task-box-color1 {
+/*
 	background-image  : -moz-linear-gradient(top, #398235, #c9de96);
 	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #398235), color-stop(1.0, #c9de96));
+*/
+	background-color : rgba(170,170,170,0.5);
+	Background:rgba(170,170,170,0.5);
+
 	margin-left: 330px;
 	margin-right: 330px;
 }
 .task-box-color2 {
+/*
 	background-image  : -moz-linear-gradient(top, #e2e2e2, #fefefe);
 	background-image  : -webkit-gradient(linear, left top , left bottom, color-stop(0.00, #e2e2e2), color-stop(1.0, #fefefe));
+*/
+	background-color : rgba(115,115,115,0.5);
+	Background:rgba(115,115,115,0.5);
+
 	float:right;
 	width:300px;
 }
 
 .task-box {
 	padding: 1px 10px;
+/*
+	min-height: 500px;
+*/
 }
 
 .loading-box{
@@ -52,3 +115,56 @@ h2 {
 	font-size  : 24px;
 	text-shadow: 2px 2px 2px #aaa;
 }
+
+.droppable {
+	min-height: 500px;
+}
+.draggable { }
+
+/* test */
+.task-list {
+	float:top;
+	cursor:hand;   
+	position: relative;
+	width: 90%;
+    min-height: 25px;
+    margin: 25px auto;
+    padding: 15px;
+    background: #f1f3a2;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(247,247,210,1)), to(rgba(240,242,155,1)));
+    background: -moz-linear-gradient(top, rgba(247,247,210,1), rgba(240,242,155,1));
+    -webkit-box-shadow: 0 2px 12px rgba(0,0,0,.5);
+    -moz-box-shadow: 0 2px 12px (rgba(0,0,0.5));
+    box-shadow: 0 1px 2px #000;
+    -webkit-transform: rotate(-.5deg);
+    -moz-transform: rotate(-.5deg);
+    -o-transform: rotate(-.5deg);
+}
+
+.task-content {
+    text-align: center;
+    font: normal normal normal 2em/1.2em 'Reenie Beanie', Helvetica, Arial, sans-serif;
+    color: #000;
+    text-shadow: white 1px 1px 0px;
+    overflow:hidden;
+}
+ 
+.task-list::before {
+    content: ' ';
+    display: block;
+	position: absolute;
+	left: 115px;
+    top: -15px;
+    width: 75px;
+    height: 25px;
+    z-index: 2;
+    background-color: rgba(243,245,228,0.5);
+    border: 2px solid rgba(255,255,255,0.5);
+    -webkit-box-shadow: 0 0 5px #888;
+    -moz-box-shadow: 0 0 5px #888;
+    box-shadow: 2px 2px 2px #000;
+    -webkit-transform: rotate(-6deg);
+    -moz-transform: rotate(-6deg);
+    -o-transform: rotate(-6deg);
+}
+

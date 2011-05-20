@@ -21,11 +21,34 @@ var D3T = (function() {
 		init: function() {
 
 			console.log("app initialized");
+
+			// フォームラベルの制御
 			$("label").inFieldLabels();
 			$("input").attr("autocomplete", "off");
 
+			// 入力フォームの制御
+			$("#input-box-buttom").click(function(){
+				$("#input-box").animate({
+					height:'toggle',
+					opacity:'toggle'
+				},'slow');
+			});
 
-
+			$(".droppable").sortable({
+					items:".task-list",
+					connectWith:$(".droppable")
+			});
+/*
+			$(".droppable").disableSelection();
+			$(".droppable").droppable({
+				tolerance: 'pointer',
+				hoverClass:'dragenter',
+				accept:'.draggable',
+				drop:function(e, ui){
+					this.insertBefore(ui.draggable.element, this.childNodes[0]);
+					console.log("droped");
+				}});
+*/
 		},
 		getAll: function() {
 			D3T.get(APIs.get, false);
@@ -55,6 +78,7 @@ var D3T = (function() {
 			];
 
 			var taskItem = null;
+			var taskContent = null;
 			var taskStatus; /* for isOnly = true Case */
 			var taskKey;    /* for isOnly = true Case */
 
@@ -62,20 +86,29 @@ var D3T = (function() {
 
 				console.log("id is " + this.KeyID);
 
-				taskItem = document.createElement("div");
+				taskItem = document.createElement("li");
 				//taskItem.attr("id","id_" + this.KeyID)
 				//		.attr("class","status_" + this.Status);
 				//taskItem.html("<p>" + this.Context + "</p>");
-				taskItem.appendChild(document.createTextNode(this.Context));
 
+				taskItem.className = "task-list draggable";
+				taskContent = document.createElement("p").appendChild(document.createTextNode(this.Context));
+				taskContent.className = "task-content";
+				taskItem.appendChild(taskContent);
+/*
+				$(taskItem).draggable({
+					cursor:'move',
+					opacity:0.5
+				
+				});
+*/
 				fragments[this.Status].appendChild(taskItem);
 				taskStatus = this.Status;
 			
 			});
 
-			var i;
 			if (!isOnly){
-				var i;
+				var i = 0;
 				for (i = 0; i < 3; i++){
 					D3T.insert(i, fragments[i]);
 				}
@@ -96,7 +129,7 @@ var D3T = (function() {
 			console.log(elem.parentNode);		
 			
 		},
-		replase:function(key/* int */,  status/*int*/, fragment /*fragmentElement*/){
+		replace:function(key/* int */,  status/*int*/, fragment /*fragmentElement*/){
 			
 			var task = document.getElementById("id_" + key);
 			var elem = document.getElementById("status" + status);
