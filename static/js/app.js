@@ -70,8 +70,21 @@ var D3T = (function() {
 		},
 		updateHandler: function(e, ui){
 			console.log($(ui.item).attr("id") + "is update");
-			var task = D3T.getHiddenValue(Number($(ui.item).attr("id").substring(3)));
-			console.log(task);
+			if (ui.sender){
+
+				var taskItem = $(ui.item);
+
+				Task =  D3T.getHiddenValue(Number(taskItem.attr("id").substring(3)));
+				
+				console.log(taskItem.parent().attr("id"));
+				if (taskItem.parent().attr("id") != $(ui.sender).attr("id")){
+					Task.Status = taskItem.parent().attr("id").substring(6);
+				}
+
+				D3T.update();
+
+				console.log(Task.Status);
+			}
 
 		},
 		getAll: function() {
@@ -241,7 +254,10 @@ var D3T = (function() {
 					},
 				success: function(msg) {
 					console.log("success :" + msg);
-					D3T.getOne(msg);
+
+					if (address === APIs.create){
+						D3T.getOne(msg);
+					}
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
 					console.log("error :" + textStatus);

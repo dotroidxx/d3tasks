@@ -127,10 +127,13 @@ h2 {
 	cursor:hand;   
 	position: relative;
 	width: 90%;
-    min-height: 25px;
-    margin: 25px auto;
-    padding: 15px;
-    background: #f1f3a2;
+    min-height: 15px;
+
+	margin: 25px auto;
+
+	padding-top: 5px;
+
+	background: #f1f3a2;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(247,247,210,1)), to(rgba(240,242,155,1)));
     background: -moz-linear-gradient(top, rgba(247,247,210,1), rgba(240,242,155,1));
     -webkit-box-shadow: 0 2px 12px rgba(0,0,0,.5);
@@ -143,8 +146,9 @@ h2 {
 }
 
 .task-content {
-    text-align: center;
-    font: normal normal normal 2em/1.2em 'Reenie Beanie', Helvetica, Arial, sans-serif;
+	padding:8px;
+    text-align: left;
+    font: normal normal normal 1.2em/0.8em 'Reenie Beanie', Helvetica, Arial, sans-serif;
     color: #000;
     text-shadow: white 1px 1px 0px;
     overflow:hidden;
