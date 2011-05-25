@@ -39,6 +39,10 @@ var D3T = (function() {
 					connectWith:$(".droppable"),
 					update:D3T.updateHandler
 			});
+
+			// bind Button click 
+			$("#create-task-button").click(D3T.createHandler);
+
 /*
 			$(".droppable").disableSelection();
 			$(".droppable").droppable({
@@ -50,6 +54,19 @@ var D3T = (function() {
 					console.log("droped");
 				}});
 */
+		},
+		createHandler: function(){
+		
+			var text = $("#task").val();
+			if (text === ""){
+	
+				$.jGrowl("Oops! Task Text is require item");
+
+				return;
+			}
+			Task.Context = text;
+			D3T.create();
+
 		},
 		updateHandler: function(e, ui){
 			console.log($(ui.item).attr("id") + "is update");
@@ -197,7 +214,13 @@ var D3T = (function() {
 				LimitDate: planDate
 			};
 		},
-		update: function() {
+		create: function(){
+			D3T.post(APIs.create);
+		},
+		update: function(){
+			D3T.post(APIs.update);
+		},
+		post: function(address /* string */) {
 			
 			console.log("Task.Key :" + Task.Key);	
 			console.log("Task.Status :" + Task.Status);
@@ -207,7 +230,7 @@ var D3T = (function() {
 
 			$.ajax({
 				type: 'POST',
-				url: APIs.update,
+				url: address,
 				data:
 					{
 						task_key: Task.Key,
@@ -257,6 +280,6 @@ var D3T = (function() {
  */
 $(document).ready(function(){
 
-	D3T.post_test();
+//	D3T.post_test();
 
 });

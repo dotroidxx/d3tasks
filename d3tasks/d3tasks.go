@@ -73,17 +73,17 @@ func getOneHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	c := appengine.NewContext(r)
-	
+
 	err = r.ParseForm()
 	check(err)
 	var id int64
 	id, err = strconv.Atoi64(r.FormValue("id"))
-	k := datastore.NewKey("Tasks","", id, nil)
+	k := datastore.NewKey("Tasks", "", id, nil)
 
 	var task *Tasks
 	err = datastore.Get(c, k, task)
 	check(err)
-	
+
 	returnJson(w, task)
 
 }
@@ -127,7 +127,7 @@ func getAllHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func returnJson(w http.ResponseWriter, v interface{}){
+func returnJson(w http.ResponseWriter, v interface{}) {
 	bytes, err := json.Marshal(v)
 	check(err)
 	w.Header().Set("Content-Type", "application/json")
@@ -181,7 +181,7 @@ func updateHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 
 	printLog(c, "Puted")
-	
+
 	returnJson(w, task.KeyID)
 
 }
@@ -207,7 +207,7 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
 	task := new(Tasks)
 
-	task.Context = r.FormValue("task_key")
+	task.Context = r.FormValue("context")
 	task.Status = 0
 	task.UserId = u.String()
 
@@ -225,10 +225,8 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 	check(err)
 
 	printLog(c, "Puted")
-	
+
 	returnJson(w, resultKey.IntID())
-
-
 
 }
 
