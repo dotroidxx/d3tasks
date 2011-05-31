@@ -3,7 +3,7 @@ package d3tasks
 // import golang liblary
 import (
 	"os"
-	"fmt"
+	//	"fmt"
 	"http"
 	"json"
 	"template"
@@ -31,11 +31,11 @@ func init() {
 	var err os.Error
 
 	// Binding Handler Funcs
-	http.HandleFunc("/", errorHandler(indexHandler))
-	http.HandleFunc("/tasks", errorHandler(getAllHandler))
-	http.HandleFunc("/onetask", errorHandler(getOneHandler))
-	http.HandleFunc("/update", errorHandler(updateHandler))
-	http.HandleFunc("/create", errorHandler(createHandler))
+	http.HandleFunc("/", ErrorHandler(indexHandler, nil))
+	http.HandleFunc("/tasks", ErrorHandler(getAllHandler, nil))
+	http.HandleFunc("/onetask", ErrorHandler(getOneHandler, nil))
+	http.HandleFunc("/update", ErrorHandler(updateHandler, nil))
+	http.HandleFunc("/create", ErrorHandler(createHandler, nil))
 
 	// initialize Templates
 	indexTemplate = template.New(nil)
@@ -230,36 +230,6 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
-// errorHandler wraps the argument handler with an error-catcher that
-// returns a 500 HTTP error if the request fails (calls check with err non-nil)
-func errorHandler(fn http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-
-		defer func() {
-			if err, ok := recover().(os.Error); ok {
-				w.WriteHeader(http.StatusInternalServerError)
-				if errorTemplate != nil {
-					errorTemplate.Execute(w, err)
-				} else {
-					fmt.Sprintf("%v", err)
-				}
-			}
-		}()
-
-		// invoke Handler Func
-		fn(w, r)
-
-	}
-}
-
-func check(err os.Error) {
-	if err != nil {
-		log.Println(err)
-		panic(err)
-	}
-
-}
 
 func printLog(c appengine.Context, v string) {
 
